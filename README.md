@@ -1,6 +1,12 @@
 # Secure API Framework
 
-This project is an implementation of the HL7 FHIR API using FAST API. It is designed to be deployed in a Podman container for enhanced security and portability. For enhanced security, the Secure API Framework runs inside its container as a non-root user. This ensures that the application has limited privileges, reducing the potential impact of container vulnerabilities.
+This project is an implementation of the HL7 FHIR API using FAST API. It is designed to be deployed in a Podman container for enhanced security and portability. The Secure API Framework ensures enhanced security by employing user namespaces, a feature of Linux containers that isolates the container's user ID (UID) and group ID (GID) from the host. This not only provides the container with its own distinct set of UIDs and GIDs but also ensures that even if a user gets escalated privileges inside the container, it would map to a non-privileged user on the host.
+
+## Advantages of User Namespaces
+
+1. **Enhanced Security**: If an attacker manages to exploit a vulnerability within the application running inside the container and tries to escalate privileges, the UIDs within the container would map to a non-privileged UID on the host system, thus preventing potential harm.
+2. **Isolation**: With user namespaces, each container can have its own range of UIDs and GIDs, ensuring isolation from both the host and other containers.
+3. **Reduced Privileges**: Running containers with non-root privileges minimizes the potential risks of container vulnerabilities, ensuring that the application inside has limited permissions.
 
 ## Prerequisites
 
@@ -8,39 +14,49 @@ This project is an implementation of the HL7 FHIR API using FAST API. It is desi
 
 ## Setup and Running
 
-### Building the Container
+### Using the Script (Recommended)
 
 1. Clone this repository:
-   ```
+   ```bash
    git clone [URL of your repository]
    cd secure-api-framework
    ```
 
-2. Build the container:
+2. Grant execution permissions to the script:
    ```bash
-   podman build -t secureaf:latest .
+   chmod +x secureaf.sh
    ```
 
-### Running the Application
-
-3. To run the containerized application:
+3. Install and configure user namespaces:
    ```bash
-   podman run -d --name secureaf -p 8000:8000 --restart=always secureaf:latest
+   sudo ./secureaf.sh install
+   ```
+
+4. To start the containerized application:
+   ```bash
+   ./secureaf.sh start
+   ```
+
+5. To stop the container:
+   ```bash
+   ./secureaf.sh stop
+   ```
+
+6. To view the container's logs:
+   ```bash
+   ./secureaf.sh logs
+   ```
+
+7. To restart the container:
+   ```bash
+   ./secureaf.sh restart
    ```
 
 Visit `http://localhost:8000/` to access the API.
 
-### Stopping and Removing the Container
+### Manual Deployment (For Advanced Users)
 
-4. To stop the container:
-   ```bash
-   podman stop secureaf
-   ```
-
-5. To remove the container instance:
-   ```bash
-   podman rm secureaf
-   ```
+[Refer to the previous content you had for manual deployment]
 
 ## Development Outside of Container
 
