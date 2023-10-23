@@ -69,10 +69,12 @@ case $1 in
                 podman rm secureaf
             fi
         fi
+        echo "Creating the network..."
+        podman network create secureaf-net
         echo "Building the container..."
         podman build -t $IMAGE_NAME .
         echo "Starting the container with user namespace..."
-        podman run --uidmap=0:600000:${RANGE_SIZE} --gidmap=0:600000:${RANGE_SIZE} -d --name secureaf -p 8000:8000 $IMAGE_NAME
+        podman run --uidmap=0:600000:${RANGE_SIZE} --gidmap=0:600000:${RANGE_SIZE} -d --name secureaf -p 8000:8000 --network=secureaf-net $IMAGE_NAME
         ;;
     start)
         if podman ps -a --format '{{.Names}}' | grep -q '^secureaf$'; then
