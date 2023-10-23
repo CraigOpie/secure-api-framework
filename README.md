@@ -1,6 +1,6 @@
 # Secure API Framework
 
-This project is an implementation of the HL7 FHIR API using FAST API. It is designed to be deployed in a Podman container for enhanced security and portability.
+This project is an implementation of the HL7 FHIR API using FAST API. It is designed to be deployed in a Podman container for enhanced security and portability. For enhanced security, the Secure API Framework runs inside its container as a non-root user. This ensures that the application has limited privileges, reducing the potential impact of container vulnerabilities.
 
 ## Prerequisites
 
